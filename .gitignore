@@ -1,0 +1,23 @@
+# Entorno virtual
+/.venv/
+
+# Byte-code de Python
+__pycache__/
+/*.py[cod]
+
+# Checkpoints de Jupyter
+.ipynb_checkpoints/
+
+# Datos crudos / pesados (si no van al repo)
+/data/raw/
+/data/*.csv
+
+# Config de editores e IDEs
+.vscode/
+/.idea/
+
+# Archivos del sistema
+.DS_Store
+
+# Logs y salidas temporales
+*.log
