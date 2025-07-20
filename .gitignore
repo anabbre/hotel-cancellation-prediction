@@ -1,5 +1,6 @@
-# Entorno virtual
+# Entorno virtual 
 /.venv/
+/.env/
 
 # Byte-code de Python
 __pycache__/
