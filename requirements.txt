@@ -7,3 +7,4 @@ imbalanced-learn>=0.8.0
 xgboost>=1.4.0
 lightgbm>=3.0.0
 catboost>=1.0.0
+joblib==1.4.0
