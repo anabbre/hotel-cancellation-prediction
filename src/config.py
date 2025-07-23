@@ -33,6 +33,16 @@ CAT_FEATURES = [
     "deposit_type", "customer_type", "season", "arrival_quarter"
 ]
 
+# Parámetros por defecto para el MLP y su grid de búsqueda
+MLP_PARAMS = {
+    "hidden_layer_sizes": (100,),
+    "activation":          "relu",
+    "solver":              "adam",
+    "alpha":               1e-4,
+    "learning_rate_init":  1e-3,
+    "max_iter":            200,
+    "random_state":        42
+}
 
 # Grids de hiperparámetros para tuning 
 HYPERPARAM_GRIDS = {
@@ -68,4 +78,11 @@ HYPERPARAM_GRIDS = {
         "l1_ratio":   [0, 0.5, 1],  # solo para elasticnet
         "class_weight":[None, "balanced"]
     },
+    "mlp": {
+        "hidden_layer_sizes": [(50,), (100,), (100, 50)],
+        "activation":         ["relu", "tanh"],
+        "alpha":              [1e-4, 1e-3, 1e-2],
+        "learning_rate_init": [1e-3, 1e-2],
+        # el resto se hereda de MLP_PARAMS
+    }
 }

@@ -7,15 +7,13 @@ from sklearn.model_selection import RandomizedSearchCV
 
 from src.data_loader import load_processed, split_data
 from src.preprocess  import preprocess
-from src.config      import (
-    HYPERPARAM_GRIDS,
-    MODEL_DIR,
-    BEST_MODEL_PATH
-)
+from src.config      import HYPERPARAM_GRIDS, MODEL_DIR, BEST_MODEL_PATH
+
 from src.model_zoo.decision_tree       import build_model as dt_builder
 from src.model_zoo.logistic_regression import build_model as lr_builder
 from src.model_zoo.gradient_boost      import build_model as gb_builder
 from src.model_zoo.random_forest       import build_model as rf_builder
+from src.model_zoo.mlp                 import build_model as mlp_builder
 
 def tune_models(Xp_train, y_train, n_iter=20, cv=3):
     builders = {
@@ -23,12 +21,13 @@ def tune_models(Xp_train, y_train, n_iter=20, cv=3):
         "logistic_regression": lr_builder,
         "gradient_boost":      gb_builder,
         "random_forest":       rf_builder,
+        "mlp":                 mlp_builder
     }
     results = {}
     for name, builder in builders.items():
         print(f"\n🔎 Tuning {name}…")
         rs = RandomizedSearchCV(
-            builder(),
+            estimator=builder(),
             param_distributions=HYPERPARAM_GRIDS[name],
             n_iter=n_iter,
             cv=cv,
@@ -50,10 +49,10 @@ def main():
     df = load_processed()
     X_train, X_val, X_test, y_train, y_val, y_test = split_data(df)
 
-    # Preprocesado solo sobre train
+    # Preprocesado solo train sobre tuning
     Xp_train, _ = preprocess(X_train, save_transformer=True)
 
-    # Tuning de cada modelo
+    # Tuning de cada modelo: buscar mejoras hiperparámetros 
     bests = tune_models(Xp_train, y_train, n_iter=20, cv=3)
 
     # Guardar cada modelo optimizado
@@ -69,7 +68,7 @@ def main():
     print(f"\n 🏆Best model is '{winner}' (AUC-ROC={bests[winner]['score']:.4f})")
     print(f"→ Copiado a {BEST_MODEL_PATH}")
 
-    # Generar resumen en CSV
+    # Generar resumen comparativo en CSV
     reports_dir = Path("reports")
     reports_dir.mkdir(exist_ok=True)
     df_summary = pd.DataFrame([
