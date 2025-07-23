@@ -1,0 +1,5 @@
+model,auc_roc
+decision_tree,0.9085643069536512
+logistic_regression,0.8882472480253537
+gradient_boost,0.9411550030096928
+random_forest,0.9436260069751286
