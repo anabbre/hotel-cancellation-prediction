@@ -27,3 +27,6 @@ __pycache__/
 # Modelos
 /models/
 
+#Artefactos binarios 
+notebooks/*.joblib
+
