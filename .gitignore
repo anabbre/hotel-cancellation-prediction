@@ -1,6 +1,5 @@
 # Entorno virtual 
 /.venv/
-/.env/
 env/
 
 # Byte-code de Python
@@ -10,13 +9,9 @@ __pycache__/
 # Checkpoints de Jupyter
 .ipynb_checkpoints/
 
-# Datos crudos / pesados (si no van al repo)
-/data/raw/
-/data/*.csv
-
 # Config de editores e IDEs
 .vscode/
-/.idea/
+.idea/
 
 # Archivos del sistema
 .DS_Store
@@ -24,9 +19,9 @@ __pycache__/
 # Logs y salidas temporales
 *.log
 
-# Modelos
-/models/
+# Modelos serializados
+models/
+*.joblib
 
-#Artefactos binarios 
-notebooks/*.joblib
-
+#Artefactos de reporte generados  
+reports/

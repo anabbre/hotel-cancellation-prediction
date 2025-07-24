@@ -1,84 +1,83 @@
 import joblib
-import shutil
-from pathlib import Path
-
 import pandas as pd
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV
 
-from src.data_loader import load_processed, split_data
-from src.preprocess  import preprocess
-from src.config      import HYPERPARAM_GRIDS, MODEL_DIR, BEST_MODEL_PATH
+from src.data_loader               import load_processed, split_data
+from src.preprocess                import preprocess
+from src.config                    import (
+    TUNE_PARAMS, METRIC, CV, N_JOBS,
+    MODEL_DIR, REPORTS_DIR, TARGET_COLUMN
+)
 
 from src.model_zoo.decision_tree       import build_model as dt_builder
 from src.model_zoo.logistic_regression import build_model as lr_builder
 from src.model_zoo.gradient_boost      import build_model as gb_builder
 from src.model_zoo.random_forest       import build_model as rf_builder
-from src.model_zoo.mlp                 import build_model as mlp_builder
 
-def tune_models(Xp_train, y_train, n_iter=20, cv=3):
-    builders = {
-        "decision_tree":       dt_builder,
-        "logistic_regression": lr_builder,
-        "gradient_boost":      gb_builder,
-        "random_forest":       rf_builder,
-        "mlp":                 mlp_builder
-    }
-    results = {}
-    for name, builder in builders.items():
-        print(f"\n🔎 Tuning {name}…")
-        rs = RandomizedSearchCV(
-            estimator=builder(),
-            param_distributions=HYPERPARAM_GRIDS[name],
-            n_iter=n_iter,
-            cv=cv,
-            scoring="roc_auc",
-            n_jobs=-1,
-            random_state=42
-        )
-        rs.fit(Xp_train, y_train)
-        results[name] = {
-            "estimator": rs.best_estimator_,
-            "score":     rs.best_score_,
-            "params":    rs.best_params_
-        }
-        print(f"→ {name} best AUC-ROC: {rs.best_score_:.4f}")
-    return results
 
 def main():
     # Carga y particionado
     df = load_processed()
-    X_train, X_val, X_test, y_train, y_val, y_test = split_data(df)
+    X_train, X_val, _, y_train, y_val, _ = split_data(df)
 
-    # Preprocesado solo train sobre tuning
-    Xp_train, _ = preprocess(X_train, save_transformer=True)
+    # Preprocesado
+    # Fit transformer en train (se guarda internamente)
+    df_train = X_train.copy()
+    df_train[TARGET_COLUMN] = y_train
+    Xp_train, y_train = preprocess(df_train, save_transformer=True)
 
-    # Tuning de cada modelo: buscar mejoras hiperparámetros 
-    bests = tune_models(Xp_train, y_train, n_iter=20, cv=3)
+    # Transform en val
+    df_val = X_val.copy()
+    df_val[TARGET_COLUMN] = y_val
+    Xp_val, y_val = preprocess(df_val, save_transformer=False)
 
-    # Guardar cada modelo optimizado
+    # GridSearch para cada modelo
+    builders = {
+        "decision_tree":       dt_builder(),
+        "logistic_regression": lr_builder(),
+        "gradient_boost":      gb_builder(),
+        "random_forest":       rf_builder(),
+    }
+
+    summary = []
+
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
-    for name, info in bests.items():
-        joblib.dump(info["estimator"], MODEL_DIR / f"{name}_best.joblib")
+    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Seleccionar y copiar el “best of the best”
-    # Buscamos el modelo con mayor AUC-ROC
-    winner = max(bests.items(), key=lambda kv: kv[1]["score"])[0]
-    src_path = MODEL_DIR / f"{winner}_best.joblib"
-    shutil.copy(src_path, BEST_MODEL_PATH)
-    print(f"\n 🏆Best model is '{winner}' (AUC-ROC={bests[winner]['score']:.4f})")
-    print(f"→ Copiado a {BEST_MODEL_PATH}")
+    for name, model in builders.items():
+        print(f"\n🔎 Tuning {name} con GridSearchCV…")
+        grid = GridSearchCV(
+            estimator  = model,
+            param_grid = TUNE_PARAMS[name],
+            scoring    = METRIC,
+            cv         = CV,
+            n_jobs     = N_JOBS,
+            refit      = True,
+            verbose    = 1
+        )
+        grid.fit(Xp_train, y_train)
 
-    # Generar resumen comparativo en CSV
-    reports_dir = Path("reports")
-    reports_dir.mkdir(exist_ok=True)
-    df_summary = pd.DataFrame([
-        {"model": name, "auc_roc": info["score"]}
-        for name, info in bests.items()
-    ])
-    csv_path = reports_dir / "auc_comparison.csv"
-    df_summary.to_csv(csv_path, index=False)
-    print(f"→ Resumen de AUC-ROC guardado en '{csv_path}'")
-    print("\n✅ Tuning completado.")
+        best_est = grid.best_estimator_
+        # Guardar modelo óptimo
+        joblib.dump(best_est, MODEL_DIR / f"{name}_best.joblib")
+
+        # Guardar resultados de CV
+        pd.DataFrame(grid.cv_results_)\
+          .to_csv(REPORTS_DIR / f"{name}_cv_results.csv", index=False)
+
+        # Añadir resumen
+        summary.append({
+            "model":     name,
+            METRIC:      grid.best_score_,
+            **{f"best_{k}": v for k, v in grid.best_params_.items()}
+        })
+
+    # Exportar CSV resumen de tuning
+    pd.DataFrame(summary)\
+      .to_csv(REPORTS_DIR / "tuning_summary.csv", index=False)
+
+    print("\n✅ Búsqueda de hiperparámetros completada.")
+    print(f" Resumen en {REPORTS_DIR/'tuning_summary.csv'}")
 
 if __name__ == "__main__":
     main()
