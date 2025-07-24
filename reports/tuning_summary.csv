@@ -1,0 +1,5 @@
+model,roc_auc,best_max_depth,best_min_samples_split,best_C,best_max_iter,best_penalty,best_solver,best_learning_rate,best_n_estimators,best_subsample,best_max_features
+decision_tree,0.918672613799294,10.0,10.0,,,,,,,,
+logistic_regression,0.8988240574485582,,,1.0,100.0,l2,liblinear,,,,
+gradient_boost,0.9447358794924128,5.0,,,,,,0.1,200.0,0.8,
+random_forest,0.9523611191578303,,,,,,,,200.0,,sqrt
