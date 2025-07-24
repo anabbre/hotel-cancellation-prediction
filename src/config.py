@@ -1,22 +1,22 @@
 from pathlib import Path
 
-# 1. Directorio raíz del proyecto
+# Directorio raíz del proyecto
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
-# 2. Rutas de datos
+# Rutas de datos
 DATA_RAW       = ROOT_DIR / "data" / "raw"       / "dataset_practica_final.csv"
 DATA_PROCESSED = ROOT_DIR / "data" / "processed" / "dataset_limpio.csv"
 
-# 3. Directorios de salida
+# Directorios de salida
 MODEL_DIR   = ROOT_DIR / "models"
 REPORTS_DIR = ROOT_DIR / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 
-# 4. Parámetros generales
+# Parámetros generales
 TARGET_COLUMN = "is_canceled"
 RANDOM_STATE  = 42
 
-# 5. Features para el preprocesado
+# Features para el preprocesado
 NUM_FEATURES = [
     "lead_time",
     "arrival_date_week_number",
@@ -53,8 +53,19 @@ CAT_FEATURES = [
     "season",
 ]
 
+# Parámetros para la red MLP con TensorFlow/Keras
+MLP_PARAMS = {
+    "hidden_layers":   [128, 64],
+    "activation":      "relu",
+    "optimizer":       "adam",
+    "metric":          "AUC",
+    "batch_size":      32,
+    "epochs":          20,
+    "validation_split": 0.2,
+    "random_seed":     42
+}
 
-# 6. Parámetros de tuning
+# Parámetros de tuning
 METRIC = "roc_auc"
 CV     = 5
 N_JOBS = -1

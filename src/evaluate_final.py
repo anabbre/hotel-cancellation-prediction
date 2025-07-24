@@ -1,6 +1,6 @@
 import joblib
 import pandas as pd
-from src.data_loader import load_processed, split_data
+from src.data_loader  import load_processed, split_data
 from src.preprocess   import preprocess
 from src.evaluate     import evaluate_model
 from src.config       import MODEL_DIR, REPORTS_DIR, TARGET_COLUMN
@@ -15,7 +15,7 @@ def main():
     df_test[TARGET_COLUMN] = y_test
     Xp_test, y_test = preprocess(df_test, save_transformer=False)
 
-    # Cargar y evaluar cada *_best.joblib
+    # Cargar y evaluar cada *_best.joblib producido en tune.py
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     final_metrics = []
 
