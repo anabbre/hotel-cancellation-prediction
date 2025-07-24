@@ -4,7 +4,7 @@ env/
 
 # Byte-code de Python
 __pycache__/
-/*.py[cod]
+*.py[cod]
 
 # Checkpoints de Jupyter
 .ipynb_checkpoints/
@@ -19,9 +19,11 @@ __pycache__/
 # Logs y salidas temporales
 *.log
 
-# Modelos serializados
+# Modelos entrenados 
 models/
-*.joblib
+
+#Datos procesados
+data/processed/
 
 #Artefactos de reporte generados  
-reports/
+*.joblib

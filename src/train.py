@@ -1,4 +1,6 @@
 import joblib
+from pathlib import Path
+from src.config import MLP_PARAMS, MODEL_DIR, TARGET_COLUMN
 
 from src.data_loader   import load_processed, split_data
 from src.preprocess    import preprocess
@@ -9,6 +11,8 @@ from src.model_zoo.decision_tree       import build_model as dt_builder
 from src.model_zoo.logistic_regression import build_model as lr_builder
 from src.model_zoo.gradient_boost      import build_model as gb_builder
 from src.model_zoo.random_forest       import build_model as rf_builder
+from src.model_zoo.mlp_tf              import build_model as tf_builder
+
 
 def main():
     # Carga datos (crea processed si falta)
@@ -41,16 +45,30 @@ def main():
         "logistic_regression": lr_builder(),
         "gradient_boost":      gb_builder(),
         "random_forest":       rf_builder(),
+        "mlp_tf":              tf_builder(input_shape=Xp_train.shape[1]),
     }
 
+    # Entrenamiento y evaluación en validación
     for name, model in builders.items():
         print(f"🚀 Entrenando {name}…")
-        model.fit(Xp_train, y_train)
+        # En Keras: usar fit con batch_size y epochs
+        if name == "mlp_tf":
+            model.fit(
+                Xp_train, y_train,
+                batch_size=MLP_PARAMS["batch_size"],
+                epochs=MLP_PARAMS["epochs"],
+                validation_split=MLP_PARAMS["validation_split"],
+                verbose=1
+            )
+        else:
+            model.fit(Xp_train, y_train)
 
+        # Serialización
         path = MODEL_DIR / f"{name}.joblib"
         joblib.dump(model, path)
         print(f" ✔ Modelo guardado en {path}")
 
+        # Métricas en validación
         print(f"\n📊 Métricas {name} (val):")
         evaluate_model(model, Xp_val, y_val, prefix=name)
         print("-" * 50 + "\n")

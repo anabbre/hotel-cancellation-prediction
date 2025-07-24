@@ -1,4 +1,5 @@
 import numpy as np
+import tensorflow as tf               
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -10,16 +11,20 @@ from sklearn.metrics import (
 
 # Imprime métricas y devuelve un dict con accuracy, precision, recall, f1, roc_auc
 def evaluate_model(model, X, y, prefix: str = "") -> dict:
-
-    # Predicciones de clase
-    y_pred = model.predict(X)
-
-    # Probabilidades o scores
-    if hasattr(model, "predict_proba"):
-        y_score = model.predict_proba(X)[:, 1]
+    # Si es un modelo de Keras
+    if isinstance(model, tf.keras.Model):
+        # predict devuelve probabilidades [0,1]
+        y_score = model.predict(X).ravel()
+        # decisión al 0.5
+        y_pred = (y_score >= 0.5).astype(int)
     else:
-        y_score = model.decision_function(X)
-    
+        # sklearn-style
+        y_pred = model.predict(X)
+        if hasattr(model, "predict_proba"):
+            y_score = model.predict_proba(X)[:, 1]
+        else:
+            y_score = model.decision_function(X)
+
     # Cálculo de métricas
     acc   = accuracy_score(y, y_pred)
     prec  = precision_score(y, y_pred)
