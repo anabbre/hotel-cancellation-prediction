@@ -4,6 +4,12 @@ Este repositorio contiene un pipeline completo de Machine Learning para **predec
 
 El proyecto abarca desde el análisis exploratorio de datos (EDA) hasta la comparación y evaluación de diversos modelos de aprendizaje automático, siguiendo las mejores prácticas de modularidad y calidad de código.
 
+---
+
+**📊 ¡Accede al Reporte Interactivo de Resultados en GitHub Pages!**
+[Haz clic aquí para ver el análisis detallado de métricas, curvas ROC y conclusiones del modelo.](TU_URL_DE_GITHUB_PAGES_AQUI)
+
+---
 ## 🎯 Objetivo y Estrategia de Evaluación
 
 El objetivo de este proyecto es construir un modelo predictivo robusto que ayude a los hoteles a minimizar las pérdidas asociadas a las cancelaciones de reservas. Predecir con antelación si una reserva será cancelada permite implementar estrategias como:
@@ -55,6 +61,8 @@ hotel-cancellation-prediction/
 │   ├── roc_csv/                   # CSVs con datos para Curvas ROC por modelo
 │   ├── auc_comparison.csv         # Resumen comparativo de AUC-ROC de todos los modelos
 │   └── 02_reporting.html          # Reporte exportado del notebook 02_reporting
+├── docs/
+│   └── 02_reporting.html          # Contiene el reporte HTML para GitHub Pages
 ├── models/                        # Modelos serializados (.joblib) y preprocesador
 ├── README.md                      # Este archivo
 └── requirements.txt               # Dependencias del proyecto
@@ -103,7 +111,7 @@ Para configurar el entorno y ejecutar el proyecto, sigue estos pasos:
     pip install -r requirements.txt
     ```
 
-## 🚀 Uso y Ejecución del Pipeline
+## 🚀 Instalación y Ejecución del Pipeline
 
 Una vez que el entorno esté configurado, puedes ejecutar el pipeline completo para generar los datos limpios, entrenar y tunear los modelos, y producir los reportes de evaluación.
 
@@ -140,11 +148,11 @@ Para una visión del rendimiento comparativo de los modelos en términos de AUC-
 
 ### Impacto en el Negocio
 
-El modelo de Random Forest, con una impresionante AUC-ROC de 0.954, representa una herramienta predictiva de gran valor estratégico para el hotel. Su implementación se traduce en beneficios tangibles:
+El modelo de Random Forest, con una impresionante AUC-ROC de 0.954, representa una herramienta predictiva de gran valor estratégico para la gestión hotelera. Su implementación se traduce en beneficios tangibles:
 
 * **Mejor toma de decisiones:** Proporciona al equipo de gestión de reservas una capacidad mejorada para identificar con alta precisión qué reservas tienen un mayor riesgo de ser canceladas. Esta inteligencia permite anticiparse a los eventos y no solo reaccionar a ellos.
-* **Optimización de ingresos:** Al conocer las probabilidades de cancelación, el hotel puede implementar estrategias proactivas y dirigidas. Esto incluye la gestión dinámica de la disponibilidad, la aplicación de políticas de sobrebooking controladas en momentos de alta demanda anticipada de cancelaciones, o la activación de ofertas personalizadas para incentivar a clientes de alto riesgo a mantener sus reservas. Todo ello reduce las pérdidas por vacantes inesperadas y maximiza la ocupación y los ingresos generales.
-* **Eficiencia operativa:** La capacidad de prever las cancelaciones mejora significativamente la planificación de recursos. Desde la optimización del personal de limpieza y recepción hasta la gestión de inventarios y la preparación de habitaciones, una previsión más fiable de la ocupación real permite una asignación de recursos más eficiente y una operación más fluida.
+* **Minimización de pérdidas:** Al predecir cancelaciones, los hoteles pueden aplicar un overbooking inteligente y contactar proactivamente a clientes de alto riesgo con ofertas personalizadas o incentivos, reduciendo las vacantes inesperadas y maximizando la ocupación y los ingresos.
+* **Eficiencia operativa:** La capacidad de prever las cancelaciones mejora significativamente la planificación de recursos (personal de limpieza, recepción, gestión de inventarios, preparación de habitaciones), lo que conduce a una asignación más eficiente y una operación más fluida.
 
 En resumen, este sistema no solo predice la cancelación, sino que proporciona inteligencia accionable fundamental para una gestión de reservas más eficiente, estratégica y, en última instancia, más rentable.
 
@@ -154,7 +162,7 @@ Para un análisis detallado de todas las métricas, matrices de confusión y cur
 
 ## ✍️ Autores y Roles
 
-- **Ana Belén Ballesteros** – Limpieza y preprocesado de datos, implementación de modelos, documentación.
-- **Victor Martínez** – 	Tuning y evaluación (src/tune.py, src/evaluate.py); integraciones con TensorFlow; merges y pipeline refactor.
+- **Ana Belén Ballesteros** – EDA, limpieza y preprocesado; modelado (src/model_zoo); reporting (notebooks, visualizaciones, README)
+- **Victor Martínez** – Tuning y evaluación (src/tune.py, src/evaluate.py); integraciones con TensorFlow; merges y pipeline refactor. 
 
 Trabajo realizado de manera colaborativa en todas las fases: diseño del pipeline, desarrollo de scripts, validación de resultados y redacción de la documentación.”
