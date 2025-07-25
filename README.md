@@ -132,7 +132,7 @@ Una vez que el entorno esté configurado, puedes ejecutar el pipeline completo p
 
 Tras la evaluación de los diferentes modelos, el **Random Forest Classifier** ha demostrado ser el de mejor rendimiento para la predicción de cancelaciones de hotel, obteniendo la siguiente métrica principal en el conjunto de test:
 
-* **AUC-ROC: 0.954**
+* **AUC-ROC: 0.953**
 
 Para una visión del rendimiento comparativo de los modelos en términos de AUC-ROC, consulta la gráfica a continuación. Random Forest muestra la curva más cercana a la esquina superior izquierda, indicando su superioridad:
 
@@ -155,6 +155,6 @@ Para un análisis detallado de todas las métricas, matrices de confusión y cur
 ## ✍️ Autores y Roles
 
 - **Ana Belén Ballesteros** – Limpieza y preprocesado de datos, implementación de modelos, documentación.
-- **Victor Martínez** – Optimización de hiperparámetros, visualización de resultados, preparación del reporte.
+- **Victor Martínez** – 	Tuning y evaluación (src/tune.py, src/evaluate.py); integraciones con TensorFlow; merges y pipeline refactor.
 
-Trabajo conjunto en el diseño del pipeline y la integración final del proyecto.
+Trabajo realizado de manera colaborativa en todas las fases: diseño del pipeline, desarrollo de scripts, validación de resultados y redacción de la documentación.”
