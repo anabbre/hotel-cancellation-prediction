@@ -93,3 +93,12 @@ TUNE_PARAMS = {
         "max_features":  ["sqrt", "log2"],
     },
 }
+
+# Lista de modelos a visualizar/evaluar
+MODEL_NAMES = [
+    "decision_tree",
+    "logistic_regression",
+    "gradient_boost",
+    "random_forest",
+    "mlp_tf",
+]
