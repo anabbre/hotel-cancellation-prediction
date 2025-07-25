@@ -1,11 +1,10 @@
 import joblib
 from pathlib import Path
-from src.config import MLP_PARAMS, MODEL_DIR, TARGET_COLUMN
 
+from src.config import MLP_PARAMS, MODEL_DIR, TARGET_COLUMN
 from src.data_loader   import load_processed, split_data
 from src.preprocess    import preprocess
 from src.evaluate      import evaluate_model
-from src.config        import MODEL_DIR, TARGET_COLUMN
 
 from src.model_zoo.decision_tree       import build_model as dt_builder
 from src.model_zoo.logistic_regression import build_model as lr_builder
