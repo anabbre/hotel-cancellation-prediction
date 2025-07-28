@@ -5,11 +5,6 @@ Este repositorio contiene un pipeline completo de Machine Learning para **predec
 El proyecto abarca desde el análisis exploratorio de datos (EDA) hasta la comparación y evaluación de diversos modelos de aprendizaje automático, siguiendo las mejores prácticas de modularidad y calidad de código.
 
 ---
-
-**📊 ¡Accede al Reporte Interactivo de Resultados en GitHub Pages!**
-[Haz clic aquí para ver el análisis detallado de métricas, curvas ROC y conclusiones del modelo.](TU_URL_DE_GITHUB_PAGES_AQUI)
-
----
 ## 🎯 Objetivo y Estrategia de Evaluación
 
 El objetivo de este proyecto es construir un modelo predictivo robusto que ayude a los hoteles a minimizar las pérdidas asociadas a las cancelaciones de reservas. Predecir con antelación si una reserva será cancelada permite implementar estrategias como:
@@ -59,10 +54,7 @@ hotel-cancellation-prediction/
 ├── reports/
 │   ├── figures/                   # Imágenes generadas (Curvas ROC, Matrices de Confusión)
 │   ├── roc_csv/                   # CSVs con datos para Curvas ROC por modelo
-│   ├── auc_comparison.csv         # Resumen comparativo de AUC-ROC de todos los modelos
-│   └── 02_reporting.html          # Reporte exportado del notebook 02_reporting
-├── docs/
-│   └── 02_reporting.html          # Contiene el reporte HTML para GitHub Pages
+│   ├── auc_comparison.csv         # Resumen comparativo de AUC-ROC de todos los 
 ├── models/                        # Modelos serializados (.joblib) y preprocesador
 ├── README.md                      # Este archivo
 └── requirements.txt               # Dependencias del proyecto
@@ -134,11 +126,16 @@ Una vez que el entorno esté configurado, puedes ejecutar el pipeline completo p
 
 3.  **Explorar los resultados:**
     * Los notebooks `01_EDA.ipynb` y `02_reporting.ipynb` pueden ser abiertos con Jupyter Lab o VS Code para explorar el análisis y los resultados de forma interactiva.
-    * El reporte HTML (`reports/02_reporting.html`) es una versión estática del notebook de reporte.
 
 ## 📊 Resultados Clave y Valor de Negocio
 
 Tras la evaluación de los diferentes modelos, el **Random Forest Classifier** ha demostrado ser el de mejor rendimiento para la predicción de cancelaciones de hotel, obteniendo la siguiente métrica principal en el conjunto de test:
+
+#### 🔍 Interpretabilidad del Modelo
+
+A continuación se muestra el gráfico de importancia de variables del modelo Random Forest. Las variables `lead_time`, `adr` y `country_PRT` destacan como los factores más influyentes para predecir la cancelación de una reserva:
+
+![Importancia de variables](reports/figures/feature_importance_rf.png)
 
 * **AUC-ROC: 0.953**
 
@@ -156,7 +153,7 @@ El modelo de Random Forest, con una impresionante AUC-ROC de 0.954, representa u
 
 En resumen, este sistema no solo predice la cancelación, sino que proporciona inteligencia accionable fundamental para una gestión de reservas más eficiente, estratégica y, en última instancia, más rentable.
 
-Para un análisis detallado de todas las métricas, matrices de confusión y curvas ROC individuales, por favor, consulta el notebook `notebooks/02_reporting.ipynb` o el reporte HTML `reports/02_reporting.html`.
+Para un análisis detallado de todas las métricas, matrices de confusión y curvas ROC individuales, por favor, consulta el notebook `notebooks/02_reporting.ipynb`.
 
 ---
 
