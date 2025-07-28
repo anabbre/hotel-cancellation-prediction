@@ -5,11 +5,6 @@ Este repositorio contiene un pipeline completo de Machine Learning para **predec
 El proyecto abarca desde el análisis exploratorio de datos (EDA) hasta la comparación y evaluación de diversos modelos de aprendizaje automático, siguiendo las mejores prácticas de modularidad y calidad de código.
 
 ---
-
-**📊 ¡Accede al Reporte Interactivo de Resultados en GitHub Pages!**
-[Haz clic aquí para ver el análisis detallado de métricas, curvas ROC y conclusiones del modelo.](TU_URL_DE_GITHUB_PAGES_AQUI)
-
----
 ## 🎯 Objetivo y Estrategia de Evaluación
 
 El objetivo de este proyecto es construir un modelo predictivo robusto que ayude a los hoteles a minimizar las pérdidas asociadas a las cancelaciones de reservas. Predecir con antelación si una reserva será cancelada permite implementar estrategias como:
@@ -50,6 +45,7 @@ hotel-cancellation-prediction/
 │   ├── evaluate.py                # Evaluación de métricas de modelos
 │   ├── evaluate_final.py          # Evaluación final de modelos optimizados
 │   ├── visualize.py               # Funciones para guardar gráficos y resúmenes
+│   ├── feature_importance.py      # Interpretabilidad (bonus)
 │   └── model_zoo/                 # Implementaciones modulares de los modelos (Model Zoo)
 │       ├── decision_tree.py
 │       ├── logistic_regression.py
@@ -57,16 +53,15 @@ hotel-cancellation-prediction/
 │       ├── random_forest.py
 │       └── mlp_tf.py              # Modelo MLP con TensorFlow/Keras
 ├── reports/
-│   ├── figures/                   # Imágenes generadas (Curvas ROC, Matrices de Confusión)
+│   ├── figures/                   # Imágenes generadas (Curvas ROC, Matrices de Confusión, gráfico de interpretabilidad con 'feature_importances)
 │   ├── roc_csv/                   # CSVs con datos para Curvas ROC por modelo
-│   ├── auc_comparison.csv         # Resumen comparativo de AUC-ROC de todos los modelos
-│   └── 02_reporting.html          # Reporte exportado del notebook 02_reporting
-├── docs/
-│   └── 02_reporting.html          # Contiene el reporte HTML para GitHub Pages
+│   ├── auc_comparison.csv         # Resumen comparativo de AUC-ROC de todos los
 ├── models/                        # Modelos serializados (.joblib) y preprocesador
+├── streamlit_app.py               # Interfaz visual de predicción de cancelaciones
 ├── README.md                      # Este archivo
 └── requirements.txt               # Dependencias del proyecto
 ```
+---
 
 ### Concepto de "Model Zoo" y Modularidad
 
@@ -78,6 +73,8 @@ Cada archivo (`decision_tree.py`, `logistic_regression.py`, `gradient_boost.py`,
 * **Facilidad de Extensión:** Añadir un nuevo modelo es tan sencillo como crear un nuevo archivo en `src/model_zoo/` con su función `build_model()`.
 * **Claridad:** La lógica de cada modelo está encapsulada, lo que mejora la legibilidad del código base.
 
+---
+
 ### Serialización y Guardado de Modelos
 
 Los modelos entrenados y el objeto `ColumnTransformer` utilizado para el preprocesado de datos se **serializan y guardan en el directorio `models/`**.
@@ -86,6 +83,8 @@ Los modelos entrenados y el objeto `ColumnTransformer` utilizado para el preproc
 * Cada modelo entrenado (inicialmente en `src/train.py` y luego los modelos optimizados con `GridSearchCV` en `src/tune.py`) se guarda en formato `.joblib`. Esto permite cargar los modelos directamente para su evaluación o despliegue, sin necesidad de reentrenarlos.
 
 Este enfoque de serialización garantiza la persistencia del estado del pipeline de preprocesado y de los modelos, facilitando la reproducibilidad y el despliegue en entornos de producción.
+
+---
 
 ## ⚙️ Instalación
 
@@ -134,11 +133,19 @@ Una vez que el entorno esté configurado, puedes ejecutar el pipeline completo p
 
 3.  **Explorar los resultados:**
     * Los notebooks `01_EDA.ipynb` y `02_reporting.ipynb` pueden ser abiertos con Jupyter Lab o VS Code para explorar el análisis y los resultados de forma interactiva.
-    * El reporte HTML (`reports/02_reporting.html`) es una versión estática del notebook de reporte.
+
+--- 
 
 ## 📊 Resultados Clave y Valor de Negocio
 
 Tras la evaluación de los diferentes modelos, el **Random Forest Classifier** ha demostrado ser el de mejor rendimiento para la predicción de cancelaciones de hotel, obteniendo la siguiente métrica principal en el conjunto de test:
+
+
+#### 🔍 Interpretabilidad del Modelo
+
+A continuación se muestra el gráfico de importancia de variables del modelo Random Forest. Las variables `lead_time`, `adr` y `country_PRT` destacan como los factores más influyentes para predecir la cancelación de una reserva:
+
+![Importancia de variables](reports/figures/feature_importance_rf.png)
 
 * **AUC-ROC: 0.953**
 
@@ -146,7 +153,7 @@ Para una visión del rendimiento comparativo de los modelos en términos de AUC-
 
 ![Comparativa de Curvas ROC de los Modelos](pictures/image.png)
 
-### Impacto en el Negocio
+#### Impacto en el Negocio
 
 El modelo de Random Forest, con una impresionante AUC-ROC de 0.954, representa una herramienta predictiva de gran valor estratégico para la gestión hotelera. Su implementación se traduce en beneficios tangibles:
 
@@ -156,13 +163,34 @@ El modelo de Random Forest, con una impresionante AUC-ROC de 0.954, representa u
 
 En resumen, este sistema no solo predice la cancelación, sino que proporciona inteligencia accionable fundamental para una gestión de reservas más eficiente, estratégica y, en última instancia, más rentable.
 
-Para un análisis detallado de todas las métricas, matrices de confusión y curvas ROC individuales, por favor, consulta el notebook `notebooks/02_reporting.ipynb` o el reporte HTML `reports/02_reporting.html`.
+Para un análisis detallado de todas las métricas, matrices de confusión y curvas ROC individuales, por favor, consulta el notebook `notebooks/02_reporting.ipynb`.
 
+---
+## 🌟 Bonus Técnicos Implementados
+
+Además de los requisitos mínimos del proyecto, se han implementado los siguientes bonus técnicos para enriquecer el sistema y su valor añadido:
+
+- ✅ **Optimización de hiperparámetros** con `GridSearchCV` (`src/tune.py`).
+- ✅ **Balanceo de clases** utilizando SMOTE en el pipeline de preprocesado (`src/preprocess.py`).
+- ✅ **Interpretabilidad** mediante el gráfico de importancias del modelo Random Forest (`feature_importances_`).
+- ✅ **Interfaz visual** desarrollada con **Streamlit** para realizar predicciones de cancelación a partir de un formulario de entrada.
+
+Estos bonus aportan transparencia, robustez y accesibilidad al sistema predictivo, acercándolo más a un entorno real de uso.
+
+
+### 🖥️ Interfaz de Predicción (Bonus)
+
+Se ha desarrollado una app web interactiva que permite introducir datos y predecir si una reserva será cancelada.
+
+```bash
+streamlit run streamlit_app.py
+```
+![Interfáz de predicción](pictures/bonus_predicción.png)
 ---
 
 ## ✍️ Autores y Roles
 
 - **Ana Belén Ballesteros** – EDA, limpieza y preprocesado; modelado (src/model_zoo); reporting (notebooks, visualizaciones, README)
-- **Victor Martínez** – Tuning y evaluación (src/tune.py, src/evaluate.py); integraciones con TensorFlow; merges y pipeline refactor. 
+- **Victor Martínez** – Tuning y evaluación (src/tune.py, src/evaluate.py); integración con TensorFlow; merges y pipeline refactor.
 
-Trabajo realizado de manera colaborativa en todas las fases: diseño del pipeline, desarrollo de scripts, validación de resultados y redacción de la documentación.”
+Trabajo realizado de manera colaborativa en todas las fases: diseño del pipeline, desarrollo de scripts, validación de resultados y redacción de la documentación.
