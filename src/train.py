@@ -14,6 +14,15 @@ from src.model_zoo.mlp_tf              import build_model as tf_builder
 
 
 def main():
+    """
+    Entrena y evalúa varios modelos de clasificación.
+
+    Carga los datos procesados, los divide en train/val/test, aplica el preprocesado,
+    entrena cinco modelos (árbol, regresión, boosting, random forest y red neuronal),
+    guarda los modelos entrenados y evalúa su rendimiento en el conjunto de validación.
+
+    Los modelos se guardan en la carpeta 'models/' y las métricas se muestran por consola.
+    """
     # Carga datos (crea processed si falta)
     df = load_processed()
 

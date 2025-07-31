@@ -5,7 +5,21 @@ from src.config import NUM_FEATURES, CAT_FEATURES
 
 # Cargamos el CSV original para su limpieza
 def clean_dataset() -> pd.DataFrame:
+    """
+    Realiza una limpieza inicial del dataset de reservas de hotel.
 
+    Incluye la eliminación de reservas sin adultos ni niños, el tratamiento de valores
+    nulos en columnas específicas ('children', 'country', 'agent'), la corrección
+    de valores de 'meal' y la creación de nuevas características como 'room_changed',
+    'total_nights', 'total_guests', 'has_children', 'has_babies', 'has_adults',
+    'is_resort_hotel', 'is_city_hotel', 'arrival_date', 'arrival_year_month',
+    'arrival_month_num', 'arrival_quarter', 'season' y 'length_of_stay'.
+    También aplica un recorte (clip) a los outliers de 'days_in_waiting_list',
+    'adr', y 'lead_time', y elimina columnas inútiles.
+
+    Returns:
+        pd.DataFrame: El DataFrame original con las transformaciones de limpieza aplicadas.
+    """
     if not DATA_RAW.exists():
         raise FileNotFoundError(f"Dataset crudo no encontrado en {DATA_RAW}")
     df = pd.read_csv(DATA_RAW)

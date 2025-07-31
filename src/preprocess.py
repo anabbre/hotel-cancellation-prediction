@@ -15,6 +15,21 @@ from src.config import TARGET_COLUMN, NUM_FEATURES, CAT_FEATURES, MODEL_DIR
 
 # Si save_transformer=True: fit_transform + dump(preprocessor); si save_transformer=False: load(preprocessor) + transform Devuelve (X_processed, y)
 def preprocess(df_clean: pd.DataFrame, save_transformer: bool = True):
+    """
+    Preprocesa el dataset separando variables numéricas y categóricas.
+
+    Aplica imputación de valores nulos y escalado a las variables numéricas,
+    y codificación one-hot a las categóricas. Si se indica, guarda el
+    transformador para usarlo luego en predicción o test.
+
+    Args:
+        df_clean (pd.DataFrame): DataFrame ya limpio.
+        save_transformer (bool): Si es True, se entrena y guarda el preprocesador.
+                                 Si es False, carga uno ya guardado y lo aplica.
+
+    Returns:
+        tuple: (X procesado como array, y si existe en el dataset)
+    """
     # Separa X e y
     X = df_clean.drop(columns=[TARGET_COLUMN], errors="ignore")
     y = df_clean[TARGET_COLUMN] if TARGET_COLUMN in df_clean else None

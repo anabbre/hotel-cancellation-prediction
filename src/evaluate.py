@@ -11,6 +11,22 @@ from sklearn.metrics import (
 
 # Imprime métricas y devuelve un dict con accuracy, precision, recall, f1, roc_auc
 def evaluate_model(model, X, y, prefix: str = "") -> dict:
+    """
+    Evalúa un modelo de clasificación y calcula varias métricas.
+
+    Maneja tanto modelos de scikit-learn como de Keras para obtener predicciones
+    y probabilidades. Calcula accuracy, precision, recall, f1-score y AUC-ROC.
+
+    Args:
+        model: El modelo entrenado a evaluar (puede ser scikit-learn o Keras).
+        X (pd.DataFrame): Características de entrada.
+        y (pd.Series): Etiquetas verdaderas.
+        prefix (str, optional): Prefijo para mostrar en la salida de las métricas.
+                                Por defecto es una cadena vacía.
+
+    Returns:
+        dict: Un diccionario con las métricas calculadas.
+    """
     # Si es un modelo de Keras
     if isinstance(model, tf.keras.Model):
         # predict devuelve probabilidades [0,1]
