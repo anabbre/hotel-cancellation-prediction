@@ -9,12 +9,27 @@ from src.data_loader import load_processed, split_data
 from src.preprocess   import preprocess
 from src.config       import MODEL_NAMES, MODEL_DIR, REPORTS_DIR, TARGET_COLUMN
 
+"""
+Genera las gráficas y archivos de comparación para evaluar los modelos entrenados.
+
+Incluye funciones para:
+- calcular curvas ROC y guardar CSVs
+- graficar curvas ROC y matrices de confusión
+- generar un CSV resumen de métricas AUC
+"""
+
 # Directorio de figuras y CSV
 FIGURES_DIR = REPORTS_DIR / "figures"
 ROC_CSV_DIR = REPORTS_DIR / "roc_csv"
 
+
 # Carga todos los modelos desde /models/*.joblib
 def load_models():
+    """
+    Carga todos los modelos entrenados desde la carpeta 'models/'.
+
+    Devuelve un diccionario con nombre del modelo como clave y objeto modelo como valor.
+    """
     models = {}
     for name in MODEL_NAMES:
         path = MODEL_DIR / f"{name}.joblib"
@@ -23,6 +38,17 @@ def load_models():
 
 # Calcula FPR, TPR y AUC para cada modelo
 def compute_roc(models, X, y):
+    """
+    Calcula curvas ROC (FPR, TPR) y el AUC para cada modelo.
+
+    Args:
+        models (dict): Modelos entrenados.
+        X (array): Datos de entrada.
+        y (array): Etiquetas reales.
+
+    Returns:
+        dict: Diccionario con FPR, TPR y AUC por modelo.
+    """
     roc_data = {}
     for name, model in models.items():
         # extraer score
@@ -39,6 +65,12 @@ def compute_roc(models, X, y):
 
 # Guarda para cada modelo un CSV con columnas FPR, TPR y una fila final con el AUC
 def save_roc_csv(roc_data):
+    """
+    Guarda un CSV por cada modelo con FPR, TPR y AUC final.
+
+    Args:
+        roc_data (dict): Datos de las curvas ROC de cada modelo.
+    """
     ROC_CSV_DIR.mkdir(parents=True, exist_ok=True)
     for name, d in roc_data.items():
         base = pd.DataFrame({"fpr": d["fpr"], "tpr": d["tpr"]})
@@ -52,6 +84,12 @@ def save_roc_csv(roc_data):
 
 # Dibuja y guarda la figura comparativa de las curvas ROC
 def plot_roc(roc_data):
+    """
+    Dibuja y guarda la figura comparativa de curvas ROC.
+
+    Args:
+        roc_data (dict): Diccionario con datos FPR, TPR y AUC.
+    """
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
     plt.figure()
     for name, d in roc_data.items():
@@ -68,6 +106,14 @@ def plot_roc(roc_data):
 
 # Dibuja y salva matrices de confusión para cada modelo
 def plot_confusion(models, X, y):
+    """
+    Dibuja y guarda la matriz de confusión de cada modelo.
+
+    Args:
+        models (dict): Modelos entrenados.
+        X (array): Datos de entrada.
+        y (array): Etiquetas reales.
+    """
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
     for name, model in models.items():
         if hasattr(model, "predict_proba") or hasattr(model, "decision_function"):
@@ -83,6 +129,11 @@ def plot_confusion(models, X, y):
 
 # Genera el CSV comparativo de AUCs a partir final_metrics.csv
 def compare_metrics_csv():
+    """
+    Lee 'final_metrics.csv' y guarda un CSV ordenado por AUC.
+
+    El archivo se guarda como 'auc_comparison.csv' en la carpeta 'reports/'.
+    """
     df = pd.read_csv(REPORTS_DIR / "final_metrics.csv")
     # Ordenar por la columna interna 'roc_auc'
     df_sorted = df.sort_values("roc_auc", ascending=False)
@@ -90,6 +141,15 @@ def compare_metrics_csv():
     print("▶️  Guardado resumen de AUC en reports/auc_comparison.csv")
 
 def main():
+    """
+    Ejecuta todo el proceso de visualización y comparación de modelos.
+
+    Incluye:
+    - carga de datos y modelos
+    - cálculo y guardado de curvas ROC
+    - gráficos ROC y matrices de confusión
+    - generación de resumen AUC
+    """
     # Cargar datos limpios y partirlos
     df = load_processed()
     X_train, X_val, X_test, y_train, y_val, y_test = split_data(df)

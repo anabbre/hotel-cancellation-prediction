@@ -46,6 +46,8 @@ hotel-cancellation-prediction/
 │   ├── evaluate_final.py          # Evaluación final de modelos optimizados
 │   ├── visualize.py               # Funciones para guardar gráficos y resúmenes
 │   ├── feature_importance.py      # Interpretabilidad (bonus)
+│   └── app/
+        ├── streamlit_app.py       # Interfaz visual de predicción de cancelaciones
 │   └── model_zoo/                 # Implementaciones modulares de los modelos (Model Zoo)
 │       ├── decision_tree.py
 │       ├── logistic_regression.py
@@ -57,7 +59,6 @@ hotel-cancellation-prediction/
 │   ├── roc_csv/                   # CSVs con datos para Curvas ROC por modelo
 │   ├── auc_comparison.csv         # Resumen comparativo de AUC-ROC de todos los
 ├── models/                        # Modelos serializados (.joblib) y preprocesador
-├── streamlit_app.py               # Interfaz visual de predicción de cancelaciones
 ├── README.md                      # Este archivo
 └── requirements.txt               # Dependencias del proyecto
 ```
@@ -183,14 +184,19 @@ Estos bonus aportan transparencia, robustez y accesibilidad al sistema predictiv
 Se ha desarrollado una app web interactiva que permite introducir datos y predecir si una reserva será cancelada.
 
 ```bash
-streamlit run streamlit_app.py
+streamlit run src/app/streamlit_app.py
 ```
 ![Interfáz de predicción](pictures/bonus_predicción.png)
 ---
 
 ## ✍️ Autores y Roles
 
-- **Ana Belén Ballesteros** – EDA, limpieza y preprocesado; modelado (src/model_zoo); reporting (notebooks, visualizaciones, README)
-- **Victor Martínez** – Tuning y evaluación (src/tune.py, src/evaluate.py); integración con TensorFlow; merges y pipeline refactor.
+- **Ana Belén Ballesteros**  
+  – EDA, limpieza y preprocesado; modelado (`src/model_zoo`); reporting (notebooks, visualizaciones, README)  
+  🔗 [LinkedIn](https://www.linkedin.com/in/ana-bel%C3%A9n-ballesteros-redondo/)
 
-Trabajo realizado de manera colaborativa en todas las fases: diseño del pipeline, desarrollo de scripts, validación de resultados y redacción de la documentación.
+- **Víctor Martínez**  
+  – Tuning y evaluación (`src/tune.py`, `src/evaluate.py`); integración con TensorFlow; merges y refactor del pipeline  
+  🔗 [LinkedIn](https://www.linkedin.com/in/victor-daniel-martinez-martinez/)
+
+> 💡 Trabajo realizado de manera colaborativa en todas las fases: diseño del pipeline, desarrollo de scripts, validación de resultados y redacción de la documentación.

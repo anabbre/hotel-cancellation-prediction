@@ -3,6 +3,12 @@ from tensorflow.keras import layers, models
 from src.config import MLP_PARAMS
 
 def build_model(input_shape):
+    """
+    Crea y compila un modelo MLP con Keras.
+
+    Usa la configuración definida en MLP_PARAMS, con varias capas densas
+    y activación final sigmoid para clasificación binaria.
+    """
     # Fijar semilla para reproducibilidad
     tf.random.set_seed(MLP_PARAMS["random_seed"])
 

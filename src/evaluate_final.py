@@ -6,6 +6,15 @@ from src.evaluate     import evaluate_model
 from src.config       import MODEL_DIR, REPORTS_DIR, TARGET_COLUMN
 
 def main():
+    """
+    Ejecuta el proceso final de evaluación de modelos.
+
+    Carga los datos procesados, los divide en conjuntos de entrenamiento,
+    validación y prueba. Preprocesa el conjunto de prueba utilizando
+    el transformador guardado. Luego, carga y evalúa cada modelo óptimo
+    (los archivos `*_best.joblib`) en el conjunto de prueba, imprime
+    sus métricas y guarda un resumen final en un archivo CSV.
+    """
     # Carga y split
     df = load_processed()
     X_train, X_val, X_test, y_train, y_val, y_test = split_data(df)

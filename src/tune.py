@@ -16,6 +16,18 @@ from src.model_zoo.random_forest       import build_model as rf_builder
 
 
 def main():
+    """
+    Realiza la búsqueda de hiperparámetros con GridSearchCV para 4 modelos.
+
+    Carga los datos preprocesados, ajusta el transformador en entrenamiento,
+    transforma el conjunto de validación y luego aplica GridSearchCV a:
+    árbol de decisión, regresión logística, gradient boost y random forest.
+
+    Guarda el mejor modelo de cada uno en 'models/' y los resultados de la búsqueda
+    en 'reports/'. También genera un CSV resumen con los mejores scores y parámetros.
+
+    No incluye el modelo MLP, ya que no se tunearon sus hiperparámetros.
+    """
     # Carga y particionado
     df = load_processed()
     X_train, X_val, _, y_train, y_val, _ = split_data(df)
